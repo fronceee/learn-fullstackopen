@@ -1,0 +1,10 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    note right of browser: { "content": "Hello!!!", "date": "2025-03-18T18:23:01.276Z" }
+    activate server
+    server->>browser: 201 Response
+    note left of server: { "message": "note created" }
+    deactivate server
