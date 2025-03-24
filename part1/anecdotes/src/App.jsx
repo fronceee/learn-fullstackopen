@@ -1,4 +1,9 @@
+import { useEffect } from 'react'
 import { useState } from 'react'
+
+const Anecdote = ({ text, votes }) => <>
+  <p>{text}</p>
+  <p>has {votes} vote{votes > 1 ? 's' : null}</p></>
 
 const App = () => {
   const anecdotes = [
@@ -14,11 +19,21 @@ const App = () => {
 
   const [selected, setSelected] = useState(0)
   const [scores, setScores] = useState(new Uint8Array(anecdotes.length))
+  const [mostVotedAnecdoteIndex,setMostVotedAnecdoteIndex] = useState(null)
 
   const handleNextAnecdote = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length);
     setSelected(randomIndex)
   }
+
+  const setMostVoted = () => {
+    const maxVotes = Math.max(...scores)
+    setMostVotedAnecdoteIndex(scores.indexOf(maxVotes))
+  }
+
+  useEffect(() => {
+    setMostVoted()
+  },[scores])
 
   const handleSetScores = () => {
     setScores(prev => {
@@ -30,10 +45,16 @@ const App = () => {
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>has {scores[selected]} vote{scores[selected] > 1 ? 's' : null}</p>
-      <button onClick={handleSetScores}>vote</button>
-      <button onClick={handleNextAnecdote}>next anecdote</button>
+      <div>
+        <h1>Anecdote of the day</h1>
+        <Anecdote text={anecdotes[selected]} votes={scores[selected]} />
+        <button onClick={handleSetScores}>vote</button>
+        <button onClick={handleNextAnecdote}>next anecdote</button>
+      </div>
+      <div>
+        <h1>Anecdote with most votes</h1>
+        <Anecdote text={anecdotes[mostVotedAnecdoteIndex]} votes={scores[mostVotedAnecdoteIndex]} />
+      </div>
     </div>
   )
 }
