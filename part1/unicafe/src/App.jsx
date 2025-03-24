@@ -6,11 +6,18 @@ const Statistics = ({ good, neutral, bad, score, totalClicked }) => {
 
   return (<div>
     <h1>statistics</h1>
-    <p>good {good}</p>
-    <p>neutral {neutral}</p>
-    <p>bad {bad}</p>
-    <p>average {average}</p>
-    <p>positive {positivePercent} %</p>
+    {totalClicked === 0 ? <p>No feedback Given</p> :
+      (
+        <>
+          <p>good {good}</p>
+          <p>neutral {neutral}</p>
+          <p>bad {bad}</p>
+          <p>average {average}</p>
+          <p>positive {positivePercent} %</p>
+        </>
+      )
+    }
+
   </div>)
 }
 const App = () => {
