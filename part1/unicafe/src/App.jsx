@@ -13,11 +13,13 @@ const Statistics = ({ good, neutral, bad, score, totalClicked }) => {
     {totalClicked === 0 ? <p>No feedback Given</p> :
       (
         <table>
-          <StatisticLine text='good' value={good} />
-          <StatisticLine text='neutral' value={neutral} />
-          <StatisticLine text='bad' value={bad} />
-          <StatisticLine text='average' value={average} />
-          <StatisticLine text='positive' value={`${positivePercent} %`} />
+          <tbody>
+            <StatisticLine text='good' value={good} />
+            <StatisticLine text='neutral' value={neutral} />
+            <StatisticLine text='bad' value={bad} />
+            <StatisticLine text='average' value={average} />
+            <StatisticLine text='positive' value={`${positivePercent} %`} />
+          </tbody>
         </table>
       )
     }
