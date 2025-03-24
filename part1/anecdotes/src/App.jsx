@@ -13,15 +13,26 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
+  const [scores, setScores] = useState(new Uint8Array(anecdotes.length))
 
   const handleNextAnecdote = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length);
     setSelected(randomIndex)
   }
 
+  const handleSetScores = () => {
+    setScores(prev => {
+      const copyArray = [...prev]
+      copyArray[selected] += 1
+      return copyArray
+    })
+  }
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
+      <p>has {scores[selected]} vote{scores[selected] > 1 ? 's' : null}</p>
+      <button onClick={handleSetScores}>vote</button>
       <button onClick={handleNextAnecdote}>next anecdote</button>
     </div>
   )
