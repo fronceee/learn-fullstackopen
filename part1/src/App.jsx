@@ -2,6 +2,12 @@ const Header = ({course}) => (<h1>{course}</h1>)
 
 const Part = ({part, exercises}) => (<p>{part} {exercises}</p>)
 
+const Content = ({part1, part2, part3}) => (<div>
+  <Part part={part1.name}  exercises={part1.exercises}/>
+  <Part part={part2.name}  exercises={part2.exercises}/>
+  <Part part={part3.name}  exercises={part3.exercises}/>
+</div>)
+
 const App = () => {
   const course = 'Half Stack application development'
   const part1 = {
@@ -21,9 +27,7 @@ const App = () => {
   return (
     <div>
       <Header course={course} />
-      <Part part={part1.name} exercises={part1.exercises} />
-      <Part part={part2.name} exercises={part2.exercises} />
-      <Part part={part3.name} exercises={part3.exercises} />
+      <Content part1={part1} part2={part2} part3={part3} />
       <p>Number of exercises {part1.exercises + part2.exercises + part3.exercises}</p>
     </div>
   )
