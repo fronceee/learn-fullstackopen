@@ -9,7 +9,7 @@ const Content = ({ parts }) => (<div>
 </div>)
 
 const Total = ({ parts }) => {
-  const totalParts = parts[0].exercises + parts[1].exercises + parts[2].exercises
+  const totalParts = parts.reduce((acc, current) => current.exercises += acc, 0)
   return <p>total of {totalParts} exercise{totalParts > 1 ? 's' : ''}</p>
 }
 
