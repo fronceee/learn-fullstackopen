@@ -8,11 +8,15 @@ const Content = ({ parts }) => (<div>
   <Part part={parts[2].name} exercises={parts[2].exercises} />
 </div>)
 
-const Total = ({ parts }) => (<p>Number of exercises {parts[0].exercises + parts[1].exercises + parts[2].exercises}</p>)
+const Total = ({ parts }) => {
+  const totalParts = parts[0].exercises + parts[1].exercises + parts[2].exercises
+  return <p>total of {totalParts} exercise{totalParts > 1 ? 's' : ''}</p>
+}
 
 const Course = ({ course }) => (<div>
   <Header course={course.name} />
   <Content parts={course.parts} />
+  <Total parts={course.parts} />
 </div>)
 
 const App = () => {
