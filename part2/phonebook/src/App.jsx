@@ -4,6 +4,7 @@ import personsService from './services/persons'
 
 import FilterInput from './FilterInput'
 import PersonForm from './PersonForm'
+import Persons from './Persons'
 
 
 
@@ -13,6 +14,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [filterValue, setFilterValue] = useState('')
+
+  console.log(persons)
 
   useEffect(() => {
     personsService.getAllPersons().then(data => setPersons(data))
@@ -51,6 +54,14 @@ const App = () => {
     })
   }
 
+  const handleDeleteClick = id => {
+    const {name} = persons.find(person => person.id === id)
+    if (confirm(`Delete ${name}?`))
+    personsService.deletePerson(id).then(data => {
+      setPersons(prev => [...prev].filter(person => person.id != data.id))
+    })
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -58,7 +69,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm nameValue={newName} numberValue={newPhone} onNameChange={handleNewNameChange} onNumberChange={handleNewPhoneChange} onFormSubmit={handleSubmit} />
       <h2>Numbers</h2>
-      {filteredPerson.map(item => (<p key={`${item.id}-${item.name}`}>{item.name} {item.number}</p>))}
+      <Persons filteredPerson={filteredPerson} onDeleteClick={handleDeleteClick}/>
     </div>
   )
 }
