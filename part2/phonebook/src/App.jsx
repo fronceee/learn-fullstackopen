@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import FilterInput from './FilterInput'
+import PersonForm from './PersonForm'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -14,37 +16,37 @@ const App = () => {
 
   const filteredPerson = filterValue ? persons.filter(item => item.name.toLowerCase().includes(filterValue.toLowerCase())) : persons
 
+  const handleFilterInputChange = (event) => {
+    setFilterValue(event.target.value)
+  }
+
+  const handleNewNameChange = (event) => {
+    setNewName(event.target.value)
+  }
+
+  const handleNewPhoneChange = (event) => {
+    setNewPhone(event.target.value)
+  }
+
+  const handleSubmit = () => {
+    if (!newName) return;
+
+    if (persons.find(item => item.name === newName)) {
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+
+    setPersons(prev => [...prev, { name: newName, number: newPhone }])
+    setNewName('')
+    setNewPhone('')
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        Filter shown with <input value={filterValue} onChange={event => setFilterValue(event.target.value)} />
-      </div>
+      <FilterInput value={filterValue} onChange={handleFilterInputChange} />
       <h2>add a new</h2>
-      <form onSubmit={(event) => {
-        event.preventDefault()
-
-        if (!newName) return;
-
-        if (persons.find(item => item.name === newName)) {
-          alert(`${newName} is already added to phonebook`)
-          return
-        }
-
-        setPersons(prev => [...prev, { name: newName, number: newPhone }])
-        setNewName('')
-        setNewPhone('')
-      }}>
-        <div>
-          name: <input value={newName} onChange={event => setNewName(event.target.value)} />
-        </div>
-        <div>
-          number: <input value={newPhone} onChange={event => setNewPhone(event.target.value)} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm nameValue={newName} numberValue={newPhone} onNameChange={handleNewNameChange} onNumberChange={handleNewPhoneChange} onFormSubmit={handleSubmit} />
       <h2>Numbers</h2>
       {filteredPerson.map(item => (<p key={`${item.id}-${item.name}`}>{item.name} {item.number}</p>))}
     </div>
