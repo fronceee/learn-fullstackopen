@@ -11,8 +11,13 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={(event) => {
         event.preventDefault()
-        
+
         if (!newName) return;
+
+        if (persons.find(item => item.name === newName)) {
+          alert(`${newName} is already added to phonebook`)
+          return
+        }
 
         setPersons(prev => [...prev, {name: newName}])
         setNewName('')
