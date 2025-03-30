@@ -4,6 +4,18 @@ import axios from 'axios'
 import FilterInput from './FilterInput'
 import PersonForm from './PersonForm'
 
+const baseURL = `${import.meta.env.VITE_API_URL}/persons`
+
+function getAllPersons() {
+  const request = axios.get(baseURL)
+  return request.then(response => response.data)
+}
+
+function addPerson(newObject) {
+  const request = axios.post(baseURL, newObject)
+  return request.then(response => response.data)
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
 
@@ -12,12 +24,8 @@ const App = () => {
   const [filterValue, setFilterValue] = useState('')
 
   useEffect(() => {
-    axios.get('http:')
-    .then(response => {
-      const data = response.data; 
-      setPersons(data)
-    })
-  },[])
+    getAllPersons().then(data => setPersons(data))
+  }, [])
 
   const filteredPerson = filterValue ? persons.filter(item => item.name.toLowerCase().includes(filterValue.toLowerCase())) : persons
 
@@ -41,9 +49,15 @@ const App = () => {
       return
     }
 
-    setPersons(prev => [...prev, { name: newName, number: newPhone }])
-    setNewName('')
-    setNewPhone('')
+    addPerson({
+      id: (persons.length + 1).toString(),
+      name: newName,
+      number: newPhone
+    }).then(data => {
+      setPersons(prev => [...prev, data])
+      setNewName('')
+      setNewPhone('')
+    })
   }
 
   return (
