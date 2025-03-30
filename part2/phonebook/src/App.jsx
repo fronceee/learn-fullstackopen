@@ -15,8 +15,6 @@ const App = () => {
   const [newPhone, setNewPhone] = useState('')
   const [filterValue, setFilterValue] = useState('')
 
-  console.log(persons)
-
   useEffect(() => {
     personsService.getAllPersons().then(data => setPersons(data))
   }, [])
@@ -35,11 +33,28 @@ const App = () => {
     setNewPhone(event.target.value)
   }
 
+  const resetStates = () => {
+    setNewName('')
+    setNewPhone('')
+  }
+
   const handleSubmit = () => {
     if (!newName) return;
 
-    if (persons.find(item => item.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+    const alreadyExistedPerson = persons.find(item => item.name === newName)
+
+    if (alreadyExistedPerson) {
+      if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        personsService.updatePerson(alreadyExistedPerson.id, { ...alreadyExistedPerson, number: newPhone }).then(data => {
+          setPersons(prev => [...prev].map(person => {
+            if (person.id === data.id) {
+              return data
+            }
+            return person
+          }))
+          resetStates()
+        })
+      }
       return
     }
 
@@ -49,17 +64,16 @@ const App = () => {
       number: newPhone
     }).then(data => {
       setPersons(prev => [...prev, data])
-      setNewName('')
-      setNewPhone('')
+      resetStates()
     })
   }
 
   const handleDeleteClick = id => {
-    const {name} = persons.find(person => person.id === id)
+    const { name } = persons.find(person => person.id === id)
     if (confirm(`Delete ${name}?`))
-    personsService.deletePerson(id).then(data => {
-      setPersons(prev => [...prev].filter(person => person.id != data.id))
-    })
+      personsService.deletePerson(id).then(data => {
+        setPersons(prev => [...prev].filter(person => person.id != data.id))
+      })
   }
 
   return (
@@ -69,7 +83,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm nameValue={newName} numberValue={newPhone} onNameChange={handleNewNameChange} onNumberChange={handleNewPhoneChange} onFormSubmit={handleSubmit} />
       <h2>Numbers</h2>
-      <Persons filteredPerson={filteredPerson} onDeleteClick={handleDeleteClick}/>
+      <Persons filteredPerson={filteredPerson} onDeleteClick={handleDeleteClick} />
     </div>
   )
 }
