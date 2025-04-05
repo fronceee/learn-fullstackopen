@@ -49,7 +49,7 @@ const App = () => {
   useEffect(() => {
     if (notificationText && notificationVaraint) {
       const reset = setTimeout(resetNotification, 5000)
-      return () => {clearTimeout(reset)}
+      return () => { clearTimeout(reset) }
     }
   }, [notificationText, notificationVaraint])
 
@@ -92,6 +92,11 @@ const App = () => {
     if (confirm(`Delete ${name}?`))
       personsService.deletePerson(id).then(data => {
         setPersons(prev => [...prev].filter(person => person.id != data.id))
+      }).catch(error => {
+        if (error.status === 404) {
+          setNotificationText(`Infomation of ${name} has been removed from server`)
+          setNotificationVariant('error')
+        }
       })
   }
 
