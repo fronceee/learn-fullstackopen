@@ -5,6 +5,7 @@ import personsService from './services/persons'
 import FilterInput from './FilterInput'
 import PersonForm from './PersonForm'
 import Persons from './Persons'
+import Notification from './Notification'
 
 
 
@@ -14,6 +15,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [filterValue, setFilterValue] = useState('')
+  const [notificationText, setNotificationText] = useState(null)
+  const [notificationVaraint, setNotificationVariant] = useState(null)
 
   useEffect(() => {
     personsService.getAllPersons().then(data => setPersons(data))
@@ -38,6 +41,18 @@ const App = () => {
     setNewPhone('')
   }
 
+  const resetNotification = () => {
+    setNotificationText(null)
+    setNotificationVariant(null)
+  }
+
+  useEffect(() => {
+    if (notificationText && notificationVaraint) {
+      const reset = setTimeout(resetNotification, 5000)
+      return () => {clearTimeout(reset)}
+    }
+  }, [notificationText, notificationVaraint])
+
   const handleSubmit = () => {
     if (!newName) return;
 
@@ -52,6 +67,8 @@ const App = () => {
             }
             return person
           }))
+          setNotificationText(`Added ${alreadyExistedPerson.name}`)
+          setNotificationVariant('success')
           resetStates()
         })
       }
@@ -64,6 +81,8 @@ const App = () => {
       number: newPhone
     }).then(data => {
       setPersons(prev => [...prev, data])
+      setNotificationText(`Added ${data.name}`)
+      setNotificationVariant('success')
       resetStates()
     })
   }
@@ -79,6 +98,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationText} variant={notificationVaraint} />
       <FilterInput value={filterValue} onChange={handleFilterInputChange} />
       <h2>add a new</h2>
       <PersonForm nameValue={newName} numberValue={newPhone} onNameChange={handleNewNameChange} onNumberChange={handleNewPhoneChange} onFormSubmit={handleSubmit} />
