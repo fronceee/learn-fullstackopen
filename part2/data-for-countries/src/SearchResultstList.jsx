@@ -8,10 +8,8 @@ function SearchResultstList({ results, onSearchResultSelect }) {
 	}
 
 	const renderedList = results.map((result) => (
-		<div>
-			<p style={{ display: "inline", marginRight: 4 }} key={result.name.common}>
-				{result.name.common}
-			</p>
+		<div key={result.name.common}>
+			<p style={{ display: "inline", marginRight: 4 }}>{result.name.common}</p>
 			<button name={result.name.common}>Show</button>
 		</div>
 	));
