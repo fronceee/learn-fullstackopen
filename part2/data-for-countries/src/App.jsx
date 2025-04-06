@@ -21,6 +21,10 @@ function App() {
 		setSearchField(event.target.value);
 	};
 
+	const handleSearchResultSelect = (value) => {
+		setSearchField(value);
+	};
+
 	const filteredCountries = useMemo(() => {
 		if (searchField) {
 			return countries.filter((country) =>
@@ -37,7 +41,10 @@ function App() {
 				onValueChange={handleInputChange}
 			/>
 			{filteredCountries.length > 1 ? (
-				<SearchResultstList results={filteredCountries} />
+				<SearchResultstList
+					results={filteredCountries}
+					onSearchResultSelect={handleSearchResultSelect}
+				/>
 			) : filteredCountries.length == 1 ? (
 				<CountryDetails detail={filteredCountries[0]} />
 			) : null}
