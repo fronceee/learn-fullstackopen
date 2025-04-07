@@ -30,6 +30,17 @@ app.get("/api/persons", (request, response) => {
 	response.json(data);
 });
 
+app.get("/api/persons/:id", (request, response) => {
+	const id = request.params.id;
+	const person = data.find((person) => person.id === id);
+
+	if (!person) {
+		response.sendStatus(404);
+	} else {
+		response.json(person);
+	}
+});
+
 app.get("/info", (request, response) => {
 	const infoText = `<p>Phonebook has info for ${data.length ?? 0} people</p>`;
 	const requestTime = `<p>${new Date()}</p>`;
