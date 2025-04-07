@@ -3,7 +3,7 @@ const app = express();
 
 const PORT = 3001;
 
-const data = [
+let data = [
 	{
 		id: "1",
 		name: "Arto Hellas",
@@ -35,10 +35,17 @@ app.get("/api/persons/:id", (request, response) => {
 	const person = data.find((person) => person.id === id);
 
 	if (!person) {
-		response.sendStatus(404);
+		response.status(404);
 	} else {
 		response.json(person);
 	}
+});
+
+app.delete("/api/persons/:id", (request, response) => {
+	const id = request.params.id;
+	data = data.filter((person) => person.id === id);
+
+	response.status(204).end();
 });
 
 app.get("/info", (request, response) => {
