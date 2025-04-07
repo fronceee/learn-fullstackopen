@@ -44,13 +44,26 @@ app.get("/api/persons/:id", (request, response) => {
 });
 
 app.post("/api/persons", (request, response) => {
-	const newData = { id: Math.floor(Math.random() * 500), ...request.body };
+	const body = request.body;
+	console.log(typeof body);
+	if (!Object.keys(body)?.length) {
+		response.status(400).json({ error: "request body is empty" });
+	}
+
+	const isNameExists = data.some((person) => person.name === body.name);
+	if (isNameExists) {
+		response.status(400).json({ error: "name must be unique" });
+	}
+
+	const newData = { id: Math.floor(Math.random() * 500), ...body };
+
 	data.push(newData);
 	response.send(request.body);
 });
 
 app.delete("/api/persons/:id", (request, response) => {
 	const id = request.params.id;
+
 	data = data.filter((person) => person.id === id);
 
 	response.status(204).end();
