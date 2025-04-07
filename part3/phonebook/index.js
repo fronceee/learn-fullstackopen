@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 const PORT = 3001;
 
 let data = [
@@ -39,6 +41,12 @@ app.get("/api/persons/:id", (request, response) => {
 	} else {
 		response.json(person);
 	}
+});
+
+app.post("/api/persons", (request, response) => {
+	const newData = { id: Math.floor(Math.random() * 500), ...request.body };
+	data.push(newData);
+	response.send(request.body);
 });
 
 app.delete("/api/persons/:id", (request, response) => {
