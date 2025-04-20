@@ -6,6 +6,16 @@ const cors = require("cors");
 
 const app = express();
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
 app.use(cors());
 
 app.use(express.json());
@@ -35,12 +45,15 @@ app.get("/api/persons/:id", (request, response) => {
   }
 });
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body;
   const newPhonebook = new phonebook({ ...body });
-  newPhonebook.save().then((result) => {
-    response.send(result);
-  });
+  newPhonebook
+    .save()
+    .then((result) => {
+      response.send(result);
+    })
+    .catch((error) => next(error));
   //   if (!Object.keys(body)?.length) {
   //     response.status(400).json({ error: "request body is empty" });
   //   }
@@ -55,12 +68,15 @@ app.post("/api/persons", (request, response) => {
   //   data.push(newData);
 });
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
 
-  data = data.filter((person) => person.id !== id);
-
-  response.status(204, { body: { person: id } }).end();
+  phonebook
+    .findByIdAndDelete(id)
+    .then(() => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/info", (request, response) => {
@@ -68,6 +84,8 @@ app.get("/info", (request, response) => {
   const requestTime = `<p>${new Date()}</p>`;
   response.send(infoText + requestTime);
 });
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
