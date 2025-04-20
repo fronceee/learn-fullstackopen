@@ -1,6 +1,10 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require('cors')
+
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 morgan.token("req-body", (req) => JSON.stringify(req.body));
@@ -70,9 +74,9 @@ app.post("/api/persons", (request, response) => {
 app.delete("/api/persons/:id", (request, response) => {
 	const id = request.params.id;
 
-	data = data.filter((person) => person.id === id);
+	data = data.filter((person) => person.id !== id);
 
-	response.status(204).end();
+	response.status(204, { body: {person: id} }).end();
 });
 
 app.get("/info", (request, response) => {
