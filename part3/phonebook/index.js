@@ -68,6 +68,26 @@ app.post("/api/persons", (request, response, next) => {
   //   data.push(newData);
 });
 
+app.put("/api/persons/:id", (request, response, next) => {
+  const id = request.params.id;
+  phonebook
+    .findById(id)
+    .then((result) => {
+      if (!result) {
+        return response.status(404).end();
+      }
+
+      const { name, number } = request.body;
+      result.name = name;
+      result.number = number;
+
+      return result.save().then((updatedResult) => {
+        response.json(updatedResult);
+      });
+    })
+    .catch((error) => next(error));
+});
+
 app.delete("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
 
