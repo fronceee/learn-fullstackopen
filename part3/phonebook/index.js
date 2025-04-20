@@ -47,25 +47,25 @@ app.get("/api/persons/:id", (request, response) => {
 
 app.post("/api/persons", (request, response, next) => {
   const body = request.body;
+
   const newPhonebook = new phonebook({ ...body });
+
+  if (!Object.keys(body)?.length) {
+    return response.status(400).json({ error: "request body is empty" });
+  }
+
+  phonebook.find({ name: body.name }).then((result) => {
+    if (result) {
+      return response.status(400).json({ error: "name must be unique" });
+    }
+  });
+
   newPhonebook
     .save()
     .then((result) => {
       response.send(result);
     })
     .catch((error) => next(error));
-  //   if (!Object.keys(body)?.length) {
-  //     response.status(400).json({ error: "request body is empty" });
-  //   }
-
-  //   const isNameExists = data.some((person) => person.name === body.name);
-  //   if (isNameExists) {
-  //     response.status(400).json({ error: "name must be unique" });
-  //   }
-
-  //   const newData = { id: Math.floor(Math.random() * 500), ...body };
-
-  //   data.push(newData);
 });
 
 app.put("/api/persons/:id", (request, response, next) => {
