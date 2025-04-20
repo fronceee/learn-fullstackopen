@@ -34,15 +34,19 @@ app.get("/api/persons", (_, response) => {
   });
 });
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
-  const person = data.find((person) => person.id === id);
 
-  if (!person) {
-    response.status(404);
-  } else {
-    response.json(person);
-  }
+  phonebook
+    .findById(id)
+    .then((result) => {
+      if (!result) {
+        response.status(404);
+      } else {
+        response.json(result);
+      }
+    })
+    .catch((error) => next(error));
 });
 
 app.post("/api/persons", (request, response, next) => {
