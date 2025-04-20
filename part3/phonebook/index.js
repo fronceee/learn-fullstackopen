@@ -37,19 +37,22 @@ app.get("/api/persons/:id", (request, response) => {
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
-  if (!Object.keys(body)?.length) {
-    response.status(400).json({ error: "request body is empty" });
-  }
+  const newPhonebook = new phonebook({ ...body });
+  newPhonebook.save().then((result) => {
+    response.send(result);
+  });
+  //   if (!Object.keys(body)?.length) {
+  //     response.status(400).json({ error: "request body is empty" });
+  //   }
 
-  const isNameExists = data.some((person) => person.name === body.name);
-  if (isNameExists) {
-    response.status(400).json({ error: "name must be unique" });
-  }
+  //   const isNameExists = data.some((person) => person.name === body.name);
+  //   if (isNameExists) {
+  //     response.status(400).json({ error: "name must be unique" });
+  //   }
 
-  const newData = { id: Math.floor(Math.random() * 500), ...body };
+  //   const newData = { id: Math.floor(Math.random() * 500), ...body };
 
-  data.push(newData);
-  response.send(request.body);
+  //   data.push(newData);
 });
 
 app.delete("/api/persons/:id", (request, response) => {
