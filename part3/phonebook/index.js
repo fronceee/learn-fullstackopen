@@ -103,10 +103,15 @@ app.delete("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.get("/info", (request, response) => {
-  const infoText = `<p>Phonebook has info for ${data.length ?? 0} people</p>`;
-  const requestTime = `<p>${new Date()}</p>`;
-  response.send(infoText + requestTime);
+app.get("/info", (request, response, next) => {
+  phonebook
+    .countDocuments()
+    .then((count) => {
+      const infoText = `<p>Phonebook has info for ${count ?? 0} people</p>`;
+      const requestTime = `<p>${new Date()}</p>`;
+      response.send(infoText + requestTime);
+    })
+    .catch((error) => next(error));
 });
 
 app.use(errorHandler);
