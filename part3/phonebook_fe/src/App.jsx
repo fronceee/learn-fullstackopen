@@ -101,6 +101,10 @@ const App = () => {
 				setNotificationText(`Added ${data.name}`);
 				setNotificationVariant("success");
 				resetStates();
+			})
+			.catch((error) => {
+				setNotificationText(error.response.data.error);
+				setNotificationVariant("error");
 			});
 	};
 
