@@ -7,7 +7,8 @@
   "linter": {
     "enabled": true,
     "rules": { "recommended": false },
-    "ignore": ["dist"]
+    "ignore": ["dist"],
+    "include": ["*.js", "/models/**.js"]
   },
   "javascript": { "formatter": { "quoteStyle": "double", "lineWidth": 80 } },
   "overrides": [
