@@ -12,7 +12,6 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
   }
-
   next(error);
 };
 
@@ -56,6 +55,12 @@ app.post("/api/persons", (request, response, next) => {
 
   if (!Object.keys(body)?.length) {
     return response.status(400).json({ error: "request body is empty" });
+  }
+
+  const validateError = newPhonebook.validateSync();
+
+  if (validateError) {
+    return response.status(400).json(validateError);
   }
 
   phonebook.find({ name: body.name }).then((result) => {
